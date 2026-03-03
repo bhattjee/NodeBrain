@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "AI Commander",
   "version": "1.0",
-  "description": "Control all AI chatbots from one dashboard",
-  "permissions": ["tabs", "scripting", "storage", "activeTab"],
+  "description": "Control ChatGPT, Claude, Gemini & Grok from one dashboard",
+  "permissions": ["tabs", "scripting", "storage", "activeTab", "clipboardWrite"],
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",
@@ -12,12 +12,13 @@
     "https://grok.com/*"
   ],
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "AI Commander"
+    "default_popup": "",
+    "default_title": "AI Commander — Open Dashboard"
   },
   "background": {
     "service_worker": "background.js"
   },
+  "chrome_url_overrides": {},
   "content_scripts": [
     {
       "matches": [

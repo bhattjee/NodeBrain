@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Commander — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#030803;--bg2:#080f08;--bg3:#0d160d;
+  --green:#00ff41;--green-dim:#00bb30;--green-dark:#001a08;--green-faint:rgba(0,255,65,0.06);
+  --border:rgba(0,255,65,0.12);--border-hi:rgba(0,255,65,0.4);
+  --text:#c8ffd4;--text-dim:#4a7050;
+  --orange:#ff8c42;--blue:#4fc3f7;--purple:#bf5fff;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;overflow:hidden;}
+
+/* scanline overlay */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px);
+}
+
+/* grid bg */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,255,65,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ── HEADER ── */
+.header{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 28px;border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,#0a160a,var(--bg));
+  position:relative;
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green-dim),transparent);
+}
+.logo{
+  width:42px;height:42px;border:2px solid var(--green);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:13px;font-weight:900;
+  color:var(--green);text-shadow:0 0 12px var(--green);
+  box-shadow:0 0 16px rgba(0,255,65,0.3),inset 0 0 12px rgba(0,255,65,0.1);
+  animation:logopulse 3s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes logopulse{
+  0%,100%{box-shadow:0 0 16px rgba(0,255,65,0.3),inset 0 0 12px rgba(0,255,65,0.1);}
+  50%{box-shadow:0 0 28px rgba(0,255,65,0.6),inset 0 0 20px rgba(0,255,65,0.2);}
+}
+.htitle{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--green);text-shadow:0 0 12px rgba(0,255,65,0.6);letter-spacing:4px;}
+.hsub{font-size:10px;color:var(--text-dim);letter-spacing:3px;margin-top:3px;}
+.hright{margin-left:auto;display:flex;align-items:center;gap:20px;}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.15;}}
+.hstatus{font-size:10px;color:var(--text-dim);letter-spacing:2px;}
+
+/* ── MAIN LAYOUT ── */
+.main{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr;
+  gap:0;
+  height:calc(100vh - 75px - 80px);
+  padding:0;
+}
+
+/* ── PANEL ── */
+.panel{
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;
+  background:var(--bg);
+  transition:background .2s;
+  position:relative;
+  overflow:hidden;
+}
+.panel:nth-child(2){border-right:none;}
+.panel:nth-child(4){border-right:none;}
+.panel:nth-child(3),.panel:nth-child(4){border-bottom:none;}
+.panel:hover{background:rgba(0,255,65,0.015);}
+
+/* corner accent */
+.panel::before{
+  content:'';position:absolute;top:0;left:0;width:40px;height:40px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(0,255,65,0.08) 0%,transparent 60%);
+}
+
+/* ── PANEL HEADER ── */
+.ph{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;border-bottom:1px solid var(--border);
+  background:rgba(0,0,0,0.4);flex-shrink:0;
+}
+.badge{
+  padding:3px 10px;border-radius:3px;border:1px solid;
+  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;
+  flex-shrink:0;
+}
+.pname{font-size:11px;color:var(--text-dim);letter-spacing:2px;flex:1;}
+.ptag{font-size:9px;color:var(--text-dim);opacity:.55;letter-spacing:1px;}
+.sbadge{
+  font-size:9px;letter-spacing:1px;padding:3px 9px;border-radius:3px;
+  border:1px solid rgba(0,255,65,0.12);color:var(--text-dim);
+  transition:all .3s;font-family:'Orbitron',monospace;
+}
+.sbadge.sending{color:#ffcc00;border-color:rgba(255,204,0,.4);animation:pulse .8s infinite;}
+.sbadge.done{color:var(--green);border-color:rgba(0,255,65,.4);}
+.sbadge.error{color:#ff4444;border-color:rgba(255,68,68,.4);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.sbtn{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 12px;
+  border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;flex-shrink:0;
+}
+.sbtn:hover{border-color:var(--green-dim);color:var(--green);box-shadow:0 0 10px rgba(0,255,65,0.2);}
+
+/* ── TEXTAREA ── */
+.pb{flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px;}
+.plabel{font-size:9px;color:var(--text-dim);letter-spacing:2px;opacity:.6;}
+textarea{
+  flex:1;width:100%;
+  background:rgba(0,255,65,0.018);
+  border:1px solid rgba(0,255,65,0.07);
+  border-radius:5px;color:var(--text);
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;line-height:1.7;
+  padding:12px 14px;resize:none;
+  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
+  letter-spacing:.3px;
+}
+textarea::placeholder{color:var(--text-dim);opacity:.45;}
+textarea:focus{
+  border-color:rgba(0,255,65,0.3);
+  background:rgba(0,255,65,0.03);
+  box-shadow:0 0 12px rgba(0,255,65,0.08);
+}
+
+/* ── FOOTER ── */
+.footer{
+  height:80px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:16px;
+  padding:0 28px;background:linear-gradient(0deg,#0a160a,var(--bg));
+  position:relative;flex-shrink:0;
+}
+.footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--green-dim),transparent);
+}
+.logbox{
+  flex:1;height:50px;overflow-y:auto;
+  background:rgba(0,0,0,0.5);border:1px solid var(--border);
+  border-radius:5px;padding:6px 12px;font-size:10px;line-height:1.9;
+}
+.le{color:var(--text-dim);}
+.le.ok{color:var(--green-dim);}
+.le.err{color:#ff4444;}
+.le.inf{color:#4fc3f7;}
+.faction{display:flex;flex-direction:column;gap:8px;align-items:center;}
+.counter{font-size:9px;color:var(--text-dim);letter-spacing:2px;text-align:center;}
+.firebtn{
+  padding:10px 28px;cursor:pointer;border-radius:5px;white-space:nowrap;
+  background:linear-gradient(135deg,#001a08,#003a12);
+  border:1px solid var(--green-dim);color:var(--green);
+  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;
+  text-shadow:0 0 10px rgba(0,255,65,.7);
+  box-shadow:0 0 18px rgba(0,255,65,.15),inset 0 0 18px rgba(0,255,65,.04);
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.firebtn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(0,255,65,.14),transparent);
+  transition:left .5s;
+}
+.firebtn:hover::before{left:100%;}
+.firebtn:hover{
+  background:linear-gradient(135deg,#002b10,#005020);
+  box-shadow:0 0 30px rgba(0,255,65,.35),inset 0 0 24px rgba(0,255,65,.1);
+  border-color:var(--green);
+}
+.firebtn:active{transform:scale(.98);}
+.clrbtn{
+  background:transparent;border:1px solid rgba(255,68,68,.18);color:rgba(255,68,68,.4);
+  font-family:'Share Tech Mono',monospace;font-size:9px;padding:4px 12px;
+  border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;white-space:nowrap;
+}
+.clrbtn:hover{border-color:rgba(255,68,68,.5);color:rgba(255,68,68,.8);}
+
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--green-dark);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--green-dim);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">AI</div>
+  <div>
+    <div class="htitle">AI COMMANDER</div>
+    <div class="hsub">MULTI-LLM UNIFIED CONTROL INTERFACE</div>
+  </div>
+  <div class="hright">
+    <span class="hstatus" id="hstatus">SYSTEMS NOMINAL</span>
+    <div class="dot"></div>
+  </div>
+</div>
+
+<!-- 2×2 GRID -->
+<div class="main">
+
+  <!-- ChatGPT -->
+  <div class="panel">
+    <div class="ph">
+      <div class="badge" style="color:#00ff41;border-color:#00ff4150;background:rgba(0,255,65,0.06)">GPT</div>
+      <span class="pname">CHATGPT · OPENAI</span>
+      <span class="ptag">FRONTEND / UI</span>
+      <span class="sbadge" id="s-chatgpt">IDLE</span>
+      <button class="sbtn" id="btn-chatgpt">SEND ▶</button>
+    </div>
+    <div class="pb">
+      <div class="plabel">MISSION BRIEF →</div>
+      <textarea id="p-chatgpt" placeholder="Frontend tasks — React components, UI design, HTML/CSS, animations...
+
+Example:
+Build a responsive login page with dark theme using React and Tailwind CSS."></textarea>
+    </div>
+  </div>
+
+  <!-- Claude -->
+  <div class="panel">
+    <div class="ph">
+      <div class="badge" style="color:#ff8c42;border-color:#ff8c4250;background:rgba(255,140,66,0.06)">CLA</div>
+      <span class="pname">CLAUDE · ANTHROPIC</span>
+      <span class="ptag">BACKEND / LOGIC</span>
+      <span class="sbadge" id="s-claude">IDLE</span>
+      <button class="sbtn" id="btn-claude">SEND ▶</button>
+    </div>
+    <div class="pb">
+      <div class="plabel">MISSION BRIEF →</div>
+      <textarea id="p-claude" placeholder="Backend tasks — APIs, server logic, architecture, debugging...
+
+Example:
+Write a Node.js Express REST API with JWT authentication and rate limiting."></textarea>
+    </div>
+  </div>
+
+  <!-- Gemini -->
+  <div class="panel">
+    <div class="ph">
+      <div class="badge" style="color:#4fc3f7;border-color:#4fc3f750;background:rgba(79,195,247,0.06)">GEM</div>
+      <span class="pname">GEMINI · GOOGLE</span>
+      <span class="ptag">RESEARCH / DOCS</span>
+      <span class="sbadge" id="s-gemini">IDLE</span>
+      <button class="sbtn" id="btn-gemini">SEND ▶</button>
+    </div>
+    <div class="pb">
+      <div class="plabel">MISSION BRIEF →</div>
+      <textarea id="p-gemini" placeholder="Research, documentation, Google APIs, image generation prompts...
+
+Example:
+Research the best database options for a real-time chat app and compare them."></textarea>
+    </div>
+  </div>
+
+  <!-- Grok -->
+  <div class="panel">
+    <div class="ph">
+      <div class="badge" style="color:#bf5fff;border-color:#bf5fff50;background:rgba(191,95,255,0.06)">GRK</div>
+      <span class="pname">GROK · XAI</span>
+      <span class="ptag">DATABASE / IDEAS</span>
+      <span class="sbadge" id="s-grok">IDLE</span>
+      <button class="sbtn" id="btn-grok">SEND ▶</button>
+    </div>
+    <div class="pb">
+      <div class="plabel">MISSION BRIEF →</div>
+      <textarea id="p-grok" placeholder="Database schema, creative ideas, alternative approaches...
+
+Example:
+Design a PostgreSQL schema for a multi-tenant SaaS app with billing support."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="logbox" id="logbox">
+    <div class="le inf">» AI COMMANDER ONLINE — FULL DASHBOARD MODE ACTIVE</div>
+  </div>
+  <div class="faction">
+    <button class="firebtn" id="fireAllBtn">⚡ FIRE ALL ⚡</button>
+    <span class="counter" id="counter">0 / 4 LOADED</span>
+  </div>
+  <button class="clrbtn" id="clearBtn">✕ CLEAR</button>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
