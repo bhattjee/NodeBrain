@@ -3,9 +3,9 @@
   "name": "AI Commander",
   "short_name": "AI Commander",
   "version": "1.0.0",
-  "description": "Control ChatGPT, Claude, Gemini & Grok from one unified dashboard. Built by YOUR NAME.",
-  "author": "YOUR NAME",
-  "homepage_url": "https://yourwebsite.com",
+  "description": "Control 16 AI models from one unified dashboard. Built by bhatt jeet.",
+  "author": "Jeet B Bhatt",
+  "homepage_url": "https://jeet-portfolio-61sl.vercel.app/",
   "permissions": ["tabs", "scripting", "storage", "activeTab", "clipboardWrite"],
   "host_permissions": [
     "https://chatgpt.com/*",
@@ -28,7 +28,7 @@
   ],
   "action": {
     "default_popup": "",
-    "default_title": "AI Commander — Open Dashboard",
+    "default_title": "NodeBrain — Open Dashboard",
     "default_icon": {
       "16":  "icons/icon16.png",
       "28":  "icons/icon28.png",
