@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "AI Commander",
+  "version": "1.0",
+  "description": "Control all AI chatbots from one dashboard",
+  "permissions": ["tabs", "scripting", "storage", "activeTab"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://grok.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Commander"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://grok.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
