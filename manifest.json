@@ -1,32 +1,64 @@
 {
   "manifest_version": 3,
   "name": "AI Commander",
-  "version": "1.0",
-  "description": "Control ChatGPT, Claude, Gemini & Grok from one dashboard",
+  "short_name": "AI Commander",
+  "version": "1.0.0",
+  "description": "Control ChatGPT, Claude, Gemini & Grok from one unified dashboard. Built by YOUR NAME.",
+  "author": "YOUR NAME",
+  "homepage_url": "https://yourwebsite.com",
   "permissions": ["tabs", "scripting", "storage", "activeTab", "clipboardWrite"],
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",
     "https://claude.ai/*",
     "https://gemini.google.com/*",
-    "https://grok.com/*"
+    "https://grok.com/*",
+    "https://chat.deepseek.com/*",
+    "https://www.perplexity.ai/*",
+    "https://kimi.moonshot.cn/*",
+    "https://chat.mistral.ai/*",
+    "https://copilot.microsoft.com/*",
+    "https://www.meta.ai/*",
+    "https://huggingface.co/*",
+    "https://you.com/*",
+    "https://poe.com/*",
+    "https://coral.cohere.com/*",
+    "https://www.phind.com/*",
+    "https://pi.ai/*"
   ],
   "action": {
     "default_popup": "",
-    "default_title": "AI Commander — Open Dashboard"
+    "default_title": "AI Commander — Open Dashboard",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "28":  "icons/icon28.png",
+      "32":  "icons/icon32.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16":  "icons/icon16.png",
+    "28":  "icons/icon28.png",
+    "32":  "icons/icon32.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "background": {
     "service_worker": "background.js"
   },
-  "chrome_url_overrides": {},
   "content_scripts": [
     {
       "matches": [
-        "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://claude.ai/*",
-        "https://gemini.google.com/*",
-        "https://grok.com/*"
+        "https://chatgpt.com/*", "https://chat.openai.com/*",
+        "https://claude.ai/*", "https://gemini.google.com/*",
+        "https://grok.com/*", "https://chat.deepseek.com/*",
+        "https://www.perplexity.ai/*", "https://kimi.moonshot.cn/*",
+        "https://chat.mistral.ai/*", "https://copilot.microsoft.com/*",
+        "https://www.meta.ai/*", "https://huggingface.co/*",
+        "https://you.com/*", "https://poe.com/*",
+        "https://coral.cohere.com/*", "https://www.phind.com/*",
+        "https://pi.ai/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"

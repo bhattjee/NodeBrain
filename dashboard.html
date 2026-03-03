@@ -2,303 +2,217 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Commander — Dashboard</title>
+<title>AI Commander</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#030803;--bg2:#080f08;--bg3:#0d160d;
-  --green:#00ff41;--green-dim:#00bb30;--green-dark:#001a08;--green-faint:rgba(0,255,65,0.06);
-  --border:rgba(0,255,65,0.12);--border-hi:rgba(0,255,65,0.4);
-  --text:#c8ffd4;--text-dim:#4a7050;
-  --orange:#ff8c42;--blue:#4fc3f7;--purple:#bf5fff;
+  --bg:#030803;--bg2:#080f08;--bg3:#0c140c;
+  --green:#00ff41;--gdim:#00bb30;--gdark:#001a08;--gfaint:rgba(0,255,65,0.05);
+  --border:rgba(0,255,65,0.11);--borderhi:rgba(0,255,65,0.38);
+  --text:#c8ffd4;--textdim:#4a7050;--textmid:#7aaa80;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;overflow:hidden;}
-
-/* scanline overlay */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.03) 3px,rgba(0,0,0,0.03) 4px);
-}
-
-/* grid bg */
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;
-  background-image:linear-gradient(rgba(0,255,65,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.03) 1px,transparent 1px);
-  background-size:40px 40px;
-}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.025) 3px,rgba(0,0,0,0.025) 4px);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,255,65,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,0.025) 1px,transparent 1px);background-size:48px 48px;}
 
 /* ── HEADER ── */
-.header{
-  display:flex;align-items:center;gap:16px;
-  padding:16px 28px;border-bottom:1px solid var(--border);
-  background:linear-gradient(180deg,#0a160a,var(--bg));
-  position:relative;
-}
-.header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--green-dim),transparent);
-}
-.logo{
-  width:42px;height:42px;border:2px solid var(--green);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Orbitron',monospace;font-size:13px;font-weight:900;
-  color:var(--green);text-shadow:0 0 12px var(--green);
-  box-shadow:0 0 16px rgba(0,255,65,0.3),inset 0 0 12px rgba(0,255,65,0.1);
-  animation:logopulse 3s ease-in-out infinite;flex-shrink:0;
-}
-@keyframes logopulse{
-  0%,100%{box-shadow:0 0 16px rgba(0,255,65,0.3),inset 0 0 12px rgba(0,255,65,0.1);}
-  50%{box-shadow:0 0 28px rgba(0,255,65,0.6),inset 0 0 20px rgba(0,255,65,0.2);}
-}
-.htitle{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--green);text-shadow:0 0 12px rgba(0,255,65,0.6);letter-spacing:4px;}
-.hsub{font-size:10px;color:var(--text-dim);letter-spacing:3px;margin-top:3px;}
-.hright{margin-left:auto;display:flex;align-items:center;gap:20px;}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.5s ease-in-out infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.15;}}
-.hstatus{font-size:10px;color:var(--text-dim);letter-spacing:2px;}
+.header{display:flex;align-items:center;gap:14px;padding:12px 24px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0c180c,var(--bg));flex-shrink:0;position:relative;}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gdim),transparent);}
+.logo{width:38px;height:38px;border:2px solid var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:12px;font-weight:900;color:var(--green);text-shadow:0 0 10px var(--green);box-shadow:0 0 14px rgba(0,255,65,0.3),inset 0 0 10px rgba(0,255,65,0.1);animation:pulse 3s ease-in-out infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{box-shadow:0 0 14px rgba(0,255,65,0.3),inset 0 0 10px rgba(0,255,65,0.1);}50%{box-shadow:0 0 26px rgba(0,255,65,0.6),inset 0 0 18px rgba(0,255,65,0.2);}}
+.htitle{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--green);text-shadow:0 0 10px rgba(0,255,65,0.6);letter-spacing:4px;}
+.hsub{font-size:9px;color:var(--textdim);letter-spacing:2px;margin-top:2px;}
+.hright{margin-left:auto;display:flex;align-items:center;gap:18px;}
+.hlegal{font-size:8px;color:var(--textdim);letter-spacing:1px;text-align:right;line-height:1.7;border-left:1px solid var(--border);padding-left:14px;}
+.hlegal a{color:var(--gdim);text-decoration:none;}
+.hlegal a:hover{color:var(--green);}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.1;}}
 
-/* ── MAIN LAYOUT ── */
-.main{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr 1fr;
-  gap:0;
-  height:calc(100vh - 75px - 80px);
-  padding:0;
+/* ── MODEL PICKER SECTION ── */
+.picker-section{padding:12px 24px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3);flex-shrink:0;}
+.picker-title{font-size:9px;color:var(--textdim);letter-spacing:3px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.picker-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.models-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.model-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 11px;border-radius:4px;
+  border:1px solid var(--border);background:var(--bg2);
+  cursor:pointer;transition:all .18s;font-size:10px;letter-spacing:1px;
+  color:var(--textdim);user-select:none;position:relative;
 }
+.model-chip:hover{border-color:var(--borderhi);color:var(--text);background:var(--gfaint);}
+.model-chip.slot1{border-color:rgba(0,255,65,0.5);color:var(--green);background:rgba(0,255,65,0.08);}
+.model-chip.slot2{border-color:rgba(79,195,247,0.5);color:#4fc3f7;background:rgba(79,195,247,0.08);}
+.model-chip .chip-dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 5px currentColor;flex-shrink:0;}
+.chip-slot{font-size:8px;font-family:'Orbitron',monospace;padding:1px 5px;border-radius:2px;margin-left:2px;}
+.chip-slot.s1{background:rgba(0,255,65,0.15);color:var(--green);}
+.chip-slot.s2{background:rgba(79,195,247,0.15);color:#4fc3f7;}
+.picker-hint{font-size:9px;color:var(--textdim);margin-top:8px;letter-spacing:1px;}
+.picker-hint span{color:var(--green);}
 
-/* ── PANEL ── */
-.panel{
-  border-right:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  display:flex;flex-direction:column;
-  background:var(--bg);
-  transition:background .2s;
-  position:relative;
-  overflow:hidden;
-}
-.panel:nth-child(2){border-right:none;}
-.panel:nth-child(4){border-right:none;}
-.panel:nth-child(3),.panel:nth-child(4){border-bottom:none;}
-.panel:hover{background:rgba(0,255,65,0.015);}
+/* ── PANELS AREA ── */
+.panels-area{display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;min-height:0;}
+.panel{display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;transition:background .2s;position:relative;}
+.panel:last-child{border-right:none;}
+.panel:hover{background:rgba(0,255,65,0.012);}
+.panel::before{content:'';position:absolute;top:0;left:0;width:50px;height:50px;pointer-events:none;background:linear-gradient(135deg,rgba(0,255,65,0.06) 0%,transparent 60%);}
 
-/* corner accent */
-.panel::before{
-  content:'';position:absolute;top:0;left:0;width:40px;height:40px;pointer-events:none;
-  background:linear-gradient(135deg,rgba(0,255,65,0.08) 0%,transparent 60%);
-}
-
-/* ── PANEL HEADER ── */
-.ph{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 18px;border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,0.4);flex-shrink:0;
-}
-.badge{
-  padding:3px 10px;border-radius:3px;border:1px solid;
-  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;
-  flex-shrink:0;
-}
-.pname{font-size:11px;color:var(--text-dim);letter-spacing:2px;flex:1;}
-.ptag{font-size:9px;color:var(--text-dim);opacity:.55;letter-spacing:1px;}
-.sbadge{
-  font-size:9px;letter-spacing:1px;padding:3px 9px;border-radius:3px;
-  border:1px solid rgba(0,255,65,0.12);color:var(--text-dim);
-  transition:all .3s;font-family:'Orbitron',monospace;
-}
-.sbadge.sending{color:#ffcc00;border-color:rgba(255,204,0,.4);animation:pulse .8s infinite;}
+.ph{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.45);flex-shrink:0;}
+.slot-label{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:3px;flex-shrink:0;}
+.slot-label.s1{color:var(--green);border:1px solid rgba(0,255,65,0.35);background:rgba(0,255,65,0.08);}
+.slot-label.s2{color:#4fc3f7;border:1px solid rgba(79,195,247,0.35);background:rgba(79,195,247,0.08);}
+.model-badge{padding:2px 10px;border-radius:3px;border:1px solid;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;flex-shrink:0;}
+.pname{font-size:10px;color:var(--textdim);letter-spacing:2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sbadge{font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:3px;border:1px solid rgba(0,255,65,0.12);color:var(--textdim);transition:all .3s;font-family:'Orbitron',monospace;flex-shrink:0;}
+.sbadge.sending{color:#ffcc00;border-color:rgba(255,204,0,.4);animation:blink .8s infinite;}
 .sbadge.done{color:var(--green);border-color:rgba(0,255,65,.4);}
 .sbadge.error{color:#ff4444;border-color:rgba(255,68,68,.4);}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.sbtn{
-  background:transparent;border:1px solid var(--border);color:var(--text-dim);
-  font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 12px;
-  border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;flex-shrink:0;
-}
-.sbtn:hover{border-color:var(--green-dim);color:var(--green);box-shadow:0 0 10px rgba(0,255,65,0.2);}
+.sbtn{background:transparent;border:1px solid var(--border);color:var(--textdim);font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 12px;border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;flex-shrink:0;}
+.sbtn:hover{border-color:var(--gdim);color:var(--green);box-shadow:0 0 8px rgba(0,255,65,0.18);}
 
-/* ── TEXTAREA ── */
-.pb{flex:1;padding:14px 18px;display:flex;flex-direction:column;gap:8px;}
-.plabel{font-size:9px;color:var(--text-dim);letter-spacing:2px;opacity:.6;}
+.pb{flex:1;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-height:0;}
+.plabel{font-size:9px;color:var(--textdim);letter-spacing:2px;flex-shrink:0;}
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--textdim);font-size:11px;letter-spacing:2px;opacity:.5;}
+.empty-icon{font-size:32px;opacity:.3;}
 textarea{
-  flex:1;width:100%;
-  background:rgba(0,255,65,0.018);
-  border:1px solid rgba(0,255,65,0.07);
-  border-radius:5px;color:var(--text);
-  font-family:'Share Tech Mono',monospace;
-  font-size:13px;line-height:1.7;
-  padding:12px 14px;resize:none;
-  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;
-  letter-spacing:.3px;
+  flex:1;width:100%;min-height:0;
+  background:rgba(0,255,65,0.015);border:1px solid rgba(0,255,65,0.07);
+  border-radius:5px;color:var(--text);font-family:'Share Tech Mono',monospace;
+  font-size:13px;line-height:1.75;padding:14px 16px;resize:none;
+  outline:none;transition:border-color .2s,box-shadow .2s,background .2s;letter-spacing:.3px;
 }
-textarea::placeholder{color:var(--text-dim);opacity:.45;}
-textarea:focus{
-  border-color:rgba(0,255,65,0.3);
-  background:rgba(0,255,65,0.03);
-  box-shadow:0 0 12px rgba(0,255,65,0.08);
-}
+textarea::placeholder{color:var(--textdim);opacity:.45;}
+textarea:focus{border-color:rgba(0,255,65,0.28);background:rgba(0,255,65,0.025);box-shadow:0 0 12px rgba(0,255,65,0.07);}
 
 /* ── FOOTER ── */
-.footer{
-  height:80px;border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:16px;
-  padding:0 28px;background:linear-gradient(0deg,#0a160a,var(--bg));
-  position:relative;flex-shrink:0;
-}
-.footer::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--green-dim),transparent);
-}
-.logbox{
-  flex:1;height:50px;overflow-y:auto;
-  background:rgba(0,0,0,0.5);border:1px solid var(--border);
-  border-radius:5px;padding:6px 12px;font-size:10px;line-height:1.9;
-}
-.le{color:var(--text-dim);}
-.le.ok{color:var(--green-dim);}
+.footer{display:flex;align-items:center;gap:14px;padding:10px 24px;border-top:1px solid var(--border);background:linear-gradient(0deg,#0a160a,var(--bg));flex-shrink:0;position:relative;}
+.footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gdim),transparent);}
+.logbox{flex:1;height:44px;overflow-y:auto;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:4px;padding:5px 11px;font-size:10px;line-height:1.9;}
+.le{color:var(--textdim);}
+.le.ok{color:var(--gdim);}
 .le.err{color:#ff4444;}
 .le.inf{color:#4fc3f7;}
-.faction{display:flex;flex-direction:column;gap:8px;align-items:center;}
-.counter{font-size:9px;color:var(--text-dim);letter-spacing:2px;text-align:center;}
-.firebtn{
-  padding:10px 28px;cursor:pointer;border-radius:5px;white-space:nowrap;
-  background:linear-gradient(135deg,#001a08,#003a12);
-  border:1px solid var(--green-dim);color:var(--green);
-  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;
-  text-shadow:0 0 10px rgba(0,255,65,.7);
-  box-shadow:0 0 18px rgba(0,255,65,.15),inset 0 0 18px rgba(0,255,65,.04);
-  transition:all .2s;position:relative;overflow:hidden;
-}
-.firebtn::before{
-  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(0,255,65,.14),transparent);
-  transition:left .5s;
-}
+.fbtngroup{display:flex;flex-direction:column;gap:5px;align-items:center;}
+.counter{font-size:9px;color:var(--textdim);letter-spacing:1px;}
+.firebtn{padding:9px 24px;cursor:pointer;border-radius:5px;white-space:nowrap;background:linear-gradient(135deg,#001a08,#003810);border:1px solid var(--gdim);color:var(--green);font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:3px;text-shadow:0 0 10px rgba(0,255,65,.7);box-shadow:0 0 16px rgba(0,255,65,.14),inset 0 0 16px rgba(0,255,65,.04);transition:all .2s;position:relative;overflow:hidden;}
+.firebtn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,65,.13),transparent);transition:left .5s;}
 .firebtn:hover::before{left:100%;}
-.firebtn:hover{
-  background:linear-gradient(135deg,#002b10,#005020);
-  box-shadow:0 0 30px rgba(0,255,65,.35),inset 0 0 24px rgba(0,255,65,.1);
-  border-color:var(--green);
-}
+.firebtn:hover{background:linear-gradient(135deg,#002b10,#004d18);box-shadow:0 0 28px rgba(0,255,65,.32),inset 0 0 20px rgba(0,255,65,.1);border-color:var(--green);}
 .firebtn:active{transform:scale(.98);}
-.clrbtn{
-  background:transparent;border:1px solid rgba(255,68,68,.18);color:rgba(255,68,68,.4);
-  font-family:'Share Tech Mono',monospace;font-size:9px;padding:4px 12px;
-  border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;white-space:nowrap;
-}
+.clrbtn{background:transparent;border:1px solid rgba(255,68,68,.18);color:rgba(255,68,68,.4);font-family:'Share Tech Mono',monospace;font-size:9px;padding:4px 12px;border-radius:3px;cursor:pointer;letter-spacing:1px;transition:all .2s;white-space:nowrap;}
 .clrbtn:hover{border-color:rgba(255,68,68,.5);color:rgba(255,68,68,.8);}
+
+/* ── LEGAL FOOTER ── */
+.legal-bar{padding:5px 24px;border-top:1px solid rgba(0,255,65,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.legal-text{font-size:8px;color:rgba(74,112,80,0.6);letter-spacing:1px;}
+.legal-text a{color:rgba(0,187,48,0.5);text-decoration:none;}
+.legal-text a:hover{color:var(--gdim);}
+.version-tag{font-family:'Orbitron',monospace;font-size:7px;color:rgba(74,112,80,0.4);letter-spacing:2px;}
 
 ::-webkit-scrollbar{width:3px;height:3px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--green-dark);border-radius:2px;}
-::-webkit-scrollbar-thumb:hover{background:var(--green-dim);}
+::-webkit-scrollbar-thumb{background:var(--gdark);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gdim);}
+
+/* Layout wrapper */
+.app{display:flex;flex-direction:column;height:100vh;}
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- HEADER -->
-<div class="header">
-  <div class="logo">AI</div>
-  <div>
-    <div class="htitle">AI COMMANDER</div>
-    <div class="hsub">MULTI-LLM UNIFIED CONTROL INTERFACE</div>
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="logo">AI</div>
+    <div>
+      <div class="htitle">NODE BRAIN</div>
+      <div class="hsub">UNIFIED MULTI-LLM CONTROL INTERFACE</div>
+    </div>
+    <div class="hright">
+      <div class="hlegal">
+        © 2025 <strong style="color:var(--gdim)">JEET BHATT</strong> · All Rights Reserved<br>
+        Built for Multitaskers · <a href="mailto:jeetbhatt1323@gmail.com">jeetbhatt1323@gmail.com</a>
+      </div>
+      <div class="dot"></div>
+    </div>
   </div>
-  <div class="hright">
-    <span class="hstatus" id="hstatus">SYSTEMS NOMINAL</span>
-    <div class="dot"></div>
+
+  <!-- ── MODEL PICKER ── -->
+  <div class="picker-section">
+    <div class="picker-title">SELECT MODELS — CLICK TO ASSIGN TO SLOT A OR B</div>
+    <div class="models-grid" id="modelsGrid"></div>
+    <div class="picker-hint" id="pickerHint">
+      → Click a model to assign to <span>SLOT A</span> · Click again to assign to <span style="color:#4fc3f7">SLOT B</span> · Click again to remove
+    </div>
   </div>
+
+  <!-- ── 2 PANELS ── -->
+  <div class="panels-area">
+    <div class="panel" id="panel-slot1">
+      <div class="ph">
+        <div class="slot-label s1">SLOT A</div>
+        <div class="model-badge" id="badge-slot1" style="color:#00ff41;border-color:rgba(0,255,65,0.3);background:rgba(0,255,65,0.06)">—</div>
+        <span class="pname" id="pname-slot1">NO MODEL SELECTED</span>
+        <span class="sbadge" id="s-slot1">IDLE</span>
+        <button class="sbtn" id="btn-slot1">SEND ▶</button>
+      </div>
+      <div class="pb">
+        <div class="plabel" id="plabel-slot1">SELECT A MODEL ABOVE TO BEGIN</div>
+        <div class="empty-state" id="empty-slot1">
+          <div class="empty-icon">◈</div>
+          <div>CLICK ANY MODEL ABOVE</div>
+          <div style="font-size:9px;opacity:.6">IT WILL LOAD HERE AS SLOT A</div>
+        </div>
+        <textarea id="p-slot1" style="display:none" placeholder="Type your prompt here..."></textarea>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-slot2">
+      <div class="ph">
+        <div class="slot-label s2">SLOT B</div>
+        <div class="model-badge" id="badge-slot2" style="color:#4fc3f7;border-color:rgba(79,195,247,0.3);background:rgba(79,195,247,0.06)">—</div>
+        <span class="pname" id="pname-slot2">NO MODEL SELECTED</span>
+        <span class="sbadge" id="s-slot2">IDLE</span>
+        <button class="sbtn" id="btn-slot2">SEND ▶</button>
+      </div>
+      <div class="pb">
+        <div class="plabel" id="plabel-slot2">SELECT A MODEL ABOVE TO BEGIN</div>
+        <div class="empty-state" id="empty-slot2">
+          <div class="empty-icon">◈</div>
+          <div>CLICK ANY MODEL ABOVE</div>
+          <div style="font-size:9px;opacity:.6">IT WILL LOAD HERE AS SLOT B</div>
+        </div>
+        <textarea id="p-slot2" style="display:none" placeholder="Type your prompt here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div class="footer">
+    <div class="logbox" id="logbox">
+      <div class="le inf">» NODE BRAIN — SELECT MODELS ABOVE TO BEGIN</div>
+    </div>
+    <div class="fbtngroup">
+      <button class="firebtn" id="fireAllBtn">⚡ FIRE BOTH ⚡</button>
+      <span class="counter" id="counter">0 / 2 SLOTS ARMED</span>
+    </div>
+    <button class="clrbtn" id="clearBtn">✕ CLEAR ALL</button>
+  </div>
+
+  <!-- ── LEGAL BAR ── -->
+  <div class="legal-bar">
+    <div class="legal-text">
+      © 2025 <strong>Jeet Bhatt</strong> · NodeBrain v1.0.0 · 
+      Proprietary Software — Unauthorized distribution prohibited · 
+      Contact: <a href="mailto:jeetbhatt1323@gmail.com">jeetbhatt1323@gmail.com</a> · 
+      <a href="https://jeet-portfolio-61sl.vercel.app/" target="_blank">https://jeet-portfolio-61sl.vercel.app/</a>
+    </div>
+    <div class="version-tag">BUILD 2025.06 · HACKATHON EDITION</div>
+  </div>
+
 </div>
-
-<!-- 2×2 GRID -->
-<div class="main">
-
-  <!-- ChatGPT -->
-  <div class="panel">
-    <div class="ph">
-      <div class="badge" style="color:#00ff41;border-color:#00ff4150;background:rgba(0,255,65,0.06)">GPT</div>
-      <span class="pname">CHATGPT · OPENAI</span>
-      <span class="ptag">FRONTEND / UI</span>
-      <span class="sbadge" id="s-chatgpt">IDLE</span>
-      <button class="sbtn" id="btn-chatgpt">SEND ▶</button>
-    </div>
-    <div class="pb">
-      <div class="plabel">MISSION BRIEF →</div>
-      <textarea id="p-chatgpt" placeholder="Frontend tasks — React components, UI design, HTML/CSS, animations...
-
-Example:
-Build a responsive login page with dark theme using React and Tailwind CSS."></textarea>
-    </div>
-  </div>
-
-  <!-- Claude -->
-  <div class="panel">
-    <div class="ph">
-      <div class="badge" style="color:#ff8c42;border-color:#ff8c4250;background:rgba(255,140,66,0.06)">CLA</div>
-      <span class="pname">CLAUDE · ANTHROPIC</span>
-      <span class="ptag">BACKEND / LOGIC</span>
-      <span class="sbadge" id="s-claude">IDLE</span>
-      <button class="sbtn" id="btn-claude">SEND ▶</button>
-    </div>
-    <div class="pb">
-      <div class="plabel">MISSION BRIEF →</div>
-      <textarea id="p-claude" placeholder="Backend tasks — APIs, server logic, architecture, debugging...
-
-Example:
-Write a Node.js Express REST API with JWT authentication and rate limiting."></textarea>
-    </div>
-  </div>
-
-  <!-- Gemini -->
-  <div class="panel">
-    <div class="ph">
-      <div class="badge" style="color:#4fc3f7;border-color:#4fc3f750;background:rgba(79,195,247,0.06)">GEM</div>
-      <span class="pname">GEMINI · GOOGLE</span>
-      <span class="ptag">RESEARCH / DOCS</span>
-      <span class="sbadge" id="s-gemini">IDLE</span>
-      <button class="sbtn" id="btn-gemini">SEND ▶</button>
-    </div>
-    <div class="pb">
-      <div class="plabel">MISSION BRIEF →</div>
-      <textarea id="p-gemini" placeholder="Research, documentation, Google APIs, image generation prompts...
-
-Example:
-Research the best database options for a real-time chat app and compare them."></textarea>
-    </div>
-  </div>
-
-  <!-- Grok -->
-  <div class="panel">
-    <div class="ph">
-      <div class="badge" style="color:#bf5fff;border-color:#bf5fff50;background:rgba(191,95,255,0.06)">GRK</div>
-      <span class="pname">GROK · XAI</span>
-      <span class="ptag">DATABASE / IDEAS</span>
-      <span class="sbadge" id="s-grok">IDLE</span>
-      <button class="sbtn" id="btn-grok">SEND ▶</button>
-    </div>
-    <div class="pb">
-      <div class="plabel">MISSION BRIEF →</div>
-      <textarea id="p-grok" placeholder="Database schema, creative ideas, alternative approaches...
-
-Example:
-Design a PostgreSQL schema for a multi-tenant SaaS app with billing support."></textarea>
-    </div>
-  </div>
-
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-  <div class="logbox" id="logbox">
-    <div class="le inf">» AI COMMANDER ONLINE — FULL DASHBOARD MODE ACTIVE</div>
-  </div>
-  <div class="faction">
-    <button class="firebtn" id="fireAllBtn">⚡ FIRE ALL ⚡</button>
-    <span class="counter" id="counter">0 / 4 LOADED</span>
-  </div>
-  <button class="clrbtn" id="clearBtn">✕ CLEAR</button>
-</div>
-
 <script src="dashboard.js"></script>
 </body>
 </html>
