@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRED Cards – Left → Middle → Right from Bottom</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      background:#000; 
+      font-family: system-ui, sans-serif; 
+      overflow-x:hidden; 
+      color:#000; 
+    }
+
+    #hero {
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      perspective: 1400px;
+    }
+
+    .cards {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1100px;
+      height: 620px;
+    }
+
+    .card {
+      position: absolute;
+      width: 380px;
+      height: 520px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.75);
+      padding: 52px 40px;
+      text-align: center;
+      font-weight: 700;
+      overflow: hidden;
+      opacity: 0;
+    }
+
+    .card h2 {
+      font-size: 2.35rem;
+      line-height: 1.15;
+      margin-bottom: 40px;
+    }
+
+    .card p {
+      font-size: 1.05rem;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    #card-left   { left: 8%;   top: 12%; transform: rotate(-13deg); }
+    #card-middle { left: 50%;  top: 8%;  transform: translateX(-50%); z-index: 10; }
+    #card-right  { right: 8%;  top: 15%; transform: rotate(15deg); }
+  </style>
+</head>
+<body>
+
+  <section id="hero">
+    <div class="cards">
+      <!-- Card Left -->
+      <div class="card" id="card-left">
+        <h2>pay via<br>CRED UPI</h2>
+        <p>SEAMLESS PAYMENTS TO UPI QR CODES, UPI IDS, OR CONTACTS.</p>
+      </div>
+
+      <!-- Card Middle -->
+      <div class="card" id="card-middle">
+        <h2>earn cashback<br>on payments</h2>
+        <p>COLLECT CASHBACK OR REWARDS ON PAYMENTS.</p>
+      </div>
+
+      <!-- Card Right -->
+      <div class="card" id="card-right">
+        <h2>use it to<br>kill your bills</h2>
+        <p>USE CASHBACK TO REDUCE YOUR CREDIT CARD BILLS</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    ScrollTrigger.create({
+      trigger: "#hero",
+      start: "top top",
+      end: "+=280%",
+      pin: true,
+      scrub: 1.2,
+      onUpdate: (self) => {
+        const p = self.progress;
+
+        // Phase 1: Left card appears first (from bottom)
+        const p1 = Math.min(1, p / 0.35);
+        gsap.to("#card-left", {
+          opacity: p1,
+          y: 300 * (1 - p1),
+          scale: 0.85 + p1 * 0.15,
+          rotation: -13
+        });
+
+        // Phase 2: Middle card appears second
+        const p2 = Math.max(0, (p - 0.35) / 0.35);
+        gsap.to("#card-middle", {
+          opacity: p2,
+          y: 300 * (1 - p2),
+          scale: 0.85 + p2 * 0.15,
+          rotation: 0
+        });
+
+        // Phase 3: Right card appears last + final stack overlap
+        const p3 = Math.max(0, (p - 0.70) / 0.30);
+        gsap.to("#card-right", {
+          opacity: p3,
+          y: 300 * (1 - p3),
+          scale: 0.85 + p3 * 0.15,
+          rotation: 15
+        });
+
+        // After all cards appear → slight overlap adjustment (final position)
+        if (p > 0.95) {
+          gsap.to("#card-left",  { x: -40,  rotation: -13, duration: 0.8, overwrite: true });
+          gsap.to("#card-middle",{ x: 0,    rotation: 0,  duration: 0.8, overwrite: true });
+          gsap.to("#card-right", { x: 40,   rotation: 15, duration: 0.8, overwrite: true });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
