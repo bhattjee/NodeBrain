@@ -4,7 +4,7 @@
   "short_name": "AI Commander",
   "version": "1.0.0",
   "description": "Control 16 AI models from one unified dashboard. Built by bhatt jeet.",
-  "author": "Jeet B Bhatt",
+  "author": "Jeet Bhatt",
   "homepage_url": "https://jeet-portfolio-61sl.vercel.app/",
   "permissions": ["tabs", "scripting", "storage", "activeTab", "clipboardWrite"],
   "host_permissions": [
